@@ -5,9 +5,11 @@ void main(List<String> arguments) {
 
   argsparser.addArgument(
     '--hello-world',
-    abberivation: '-h',
+    // abbreviation: '-h',
     required: false,
   );
+  
+  argsparser.passArguments();
   
   print('arguments: ${argsparser.arguments}');
 }

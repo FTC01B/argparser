@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'operands.dart';
 
 class Parser {
   String name;
@@ -18,7 +19,7 @@ class Argsparser {
 
   void addArgument(String name, {bool required = true, Type type = String, String? abbreviation}) {
     if (parser.where((arg) => arg.name == name || arg.abbreviation == abbreviation || arg.name == abbreviation || arg.abbreviation == name).isNotEmpty) {
-      print('name: $name, abbreviation: $abbreviation already taken');
+      print('name: $name, abbreviation: ${abbreviation ?? '[none set]'} already taken');
       exit(1);
     }
 
@@ -31,6 +32,11 @@ class Argsparser {
   }
 
   void help() {
+    final requiredArguments = parser.where((arg) => arg.required);
+    final optionalArguments = parser.where((arg) => !arg.required);
+
+    print();
+
     exit(1);
   }
 
@@ -38,7 +44,11 @@ class Argsparser {
     final requiredArguments = parser.where((arg) => arg.required);
 
     for (var argument in requiredArguments) {
-      
+      if (xor(rawArguments.contains(argument.name), rawArguments.contains(argument.abbreviation))) {
+        continue;
+      }
+      print('missing argument ${argument.name}');
+      help();
     }
 
     if (arguments['--help']) {
